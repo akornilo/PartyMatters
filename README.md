@@ -6,7 +6,11 @@ The dataset can be found [here](https://drive.google.com/drive/folders/1NIV9ieyH
 
 # Process Description
 
-The dependencies are specified in the `enviornment.lst` file - it was created with miniconda, but a pip install should work.
+## Preparation
+
+1. The dependencies are specified in the `enviornment.lst` file - it was created with miniconda, but a pip install should work.
+2. Create a `data` folder and put the data from the drive into it.
+
 
 ## Cleaning the data
 
