@@ -5,6 +5,7 @@ from keras.models import Sequential, Model
 #from keras.metrics import fmeasure
 import numpy as np
 import pandas as pd
+import pickle
 import random
 from sklearn.model_selection import KFold
 
