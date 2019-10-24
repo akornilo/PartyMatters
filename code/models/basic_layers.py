@@ -380,4 +380,4 @@ if __name__ == '__main__':
 
         all_scores.append(score)
 
-    pickle.dump(all_scores, open('basic_model_score-new.pkl', 'wb'))
+    pickle.dump(all_scores, open(f'text_model_scores_{mode}_{bill_type}.pkl', 'wb'))

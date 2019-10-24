@@ -163,7 +163,7 @@ if __name__ == '__main__':
     prefix = "../data/us_data/"
 
     mode = 'summary' # 'fulltext'
-    bill_type = 'cnn'
+    bill_type = 'cnn' # mwe
     experiment_name = 'meta_{}_{}_v1'.format(mode, bill_type)
 
     if mode == 'summary':
@@ -212,5 +212,6 @@ if __name__ == '__main__':
         print("SCORE:", score)
 
         all_scores.append(score)
-        break
-    pickle.dump(all_scores, open('meta_model_score.pkl', 'wb'))
+        
+
+    pickle.dump(all_scores, open('meta_model_scores_{mode}_{bill_type}.pkl', 'wb'))
