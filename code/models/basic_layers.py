@@ -251,7 +251,9 @@ def prepare_basic_model_features(vote_df, text_field='text',
 
     all_data = [vote_df["leg_id_v2"].values, text_df]
 
-    return all_data, vectorizer, leg_crosswalk
+    votes = vote_df.vote.astype(int).values
+
+    return all_data, votes, vectorizer, leg_crosswalk
 
 def get_default_callbacks(experiment_name='some_model', patience=10, min_delta=0,
             use_checkpoint=True, use_early_stop = True):
@@ -280,20 +282,20 @@ def batch_generator(features, labels, batch_size=50):
 def evaluate_model(vote_df_train, vote_df_test, 
                     experiment_name='some_experiment', **kwargs):
 
-    all_train_data, vectorizer, leg_crosswalk = prepare_basic_model_features(vote_df_train,
+    all_train_data, train_votes, vectorizer, leg_crosswalk = prepare_basic_model_features(vote_df_train,
                                                   **kwargs)
 
-    all_test_data, _, _ = prepare_basic_model_features(vote_df_test,
+    all_test_data, test_votes, _, _ = prepare_basic_model_features(vote_df_test,
                                                   vectorizer=vectorizer, 
                                                   leg_crosswalk=leg_crosswalk,
                                                   **kwargs)
 
-    all_2013, _, _ = prepare_basic_model_features(vote_df_2013, 
+    all_2013, votes_2013, _, _ = prepare_basic_model_features(vote_df_2013, 
                                                   vectorizer=vectorizer, 
                                                   leg_crosswalk=leg_crosswalk,
                                                   **kwargs)
 
-    all_2015, _, _ = prepare_basic_model_features(vote_df_2015, 
+    all_2015, votes_2015, _, _ = prepare_basic_model_features(vote_df_2015, 
                                                   vectorizer=vectorizer, 
                                                   leg_crosswalk=leg_crosswalk,
                                                   **kwargs)
@@ -304,9 +306,6 @@ def evaluate_model(vote_df_train, vote_df_test,
     # Get distinct legs in train data
     n_leg = len(vote_df_train.leg_id_v2.unique())
     vocab_size = word_embeddings.shape[0]
-
-    train_votes = vote_df_train["vote"].astype(int).values
-    test_votes = vote_df_test["vote"].astype(int).values
 
     callbacks = get_default_callbacks(experiment_name=experiment_name, use_checkpoint=True)
 
@@ -323,11 +322,14 @@ def evaluate_model(vote_df_train, vote_df_test,
           callbacks=callbacks)
     
     score = model.evaluate(all_test_data,  test_votes)
+    
+    score_2013 = model.evaluate(all_2013, votes_2013)
+    print('2013', score_2013)
 
-    print('2013', model.evaluate(all_2013, vote_df_2013.vote))
+    score_2015 = model.evaluate(all_2015, votes_2015)
+    print('2015', score_2015)
 
-    print('2015', model.evaluate(all_2015, vote_df_2015.vote))
-
+    scores = {'20052012': score, '20132014': score_2013, '20152016': score_2015}
     return score
 
 
