@@ -14,6 +14,7 @@ The dataset can be found [here](https://drive.google.com/drive/folders/1NIV9ieyH
 
 ## Cleaning the data
 
+Run the `code/feature_processing/data_prep.py` file - fix the global vars in it to point to your data.
 
 ## Running the different models
 
