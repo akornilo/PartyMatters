@@ -112,6 +112,18 @@ def prepare_two_party_model_features(vote_df, **kwargs):
     '''	
     # Prepare text and leg mappings through basic function
     all_basic_data, vectorizer, leg_crosswalk = prepare_basic_model_features(vote_df, **kwargs)
+    
+    # Set-up common system to map both train and test data to 
+    # Only create a new one, if it has not already been defined.
+    if leg_crosswalk is None:
+        leg_ids = vote_df["leg_id"].unique()
+        leg_crosswalk = pd.Series(leg_ids).to_dict()
+
+    leg_crosswalk_rev = dict((v, k) for k, v in leg_crosswalk.items())
+    vote_df['leg_id_v2'] = vote_df.leg_id.map(leg_crosswalk_rev)
+
+    # If some legislators did not get a leg_id, drop them
+    vote_df = vote_df[vote_df.leg_id_v2.notnull()]
 
     # Create sponsor party features
     meta_rep, meta_dem = prepare_sponsor_party_percs(vote_df)
